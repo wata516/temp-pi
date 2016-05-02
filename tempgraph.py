@@ -6,7 +6,7 @@ import json
 param = sys.argv
 
 if __name__ == "__main__":
-	home_path = param[1] + "\\"
+	home_path = param[1] + os.sep
 	year = int(param[2])
 	month = int(param[3])
 	day = int(param[4])

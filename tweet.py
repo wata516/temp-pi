@@ -1,3 +1,4 @@
+import os
 import json
 import tweepy
 
@@ -8,7 +9,7 @@ class tweet:
 	__ACCESS_SECRET=""
 
 	def Create(self, config_path):
-		file = open(config_path + "\\twitter_config.json")
+		file = open(config_path + os.sep + "twitter_config.json")
 		jsonObjects = json.load(file)
 		file.close()
 		self.__CONSUMER_KEY = jsonObjects["user"]["CONSUMER_KEY"]
