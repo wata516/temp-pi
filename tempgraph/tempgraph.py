@@ -6,12 +6,13 @@ import json
 param = sys.argv
 
 if __name__ == "__main__":
-	year = int(param[1])
-	month = int(param[2])
-	day = int(param[3])
+	home_path = param[1] + "\\"
+	year = int(param[2])
+	month = int(param[3])
+	day = int(param[4])
 	
-	filename = "%04d/%02d/%02d.json" % (year,month,day)
-	graphfilename = "%04d/%02d/%02d.png" % (year,month,day)
+	filename = home_path + "%04d/%02d/%02d.json" % (year,month,day)
+	graphfilename = home_path + "%04d/%02d/%02d.png" % (year,month,day)
 
 	try:
 		file = open(filename,"r")
