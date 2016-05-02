@@ -1,13 +1,12 @@
 import json
-import twpy.py
+import tweepy
 
 class tweet:
 	__CONSUMER_KEY=""
 	__CONSUMER_SECRET=""
 	__ACCESS_TOKEN=""
 	__ACCESS_SECRET=""
-	__auth
-	__api
+
 	def Create(self, config_path):
 		file = open(config_path)
 		jsonObjects = json.load(file)
@@ -18,4 +17,9 @@ class tweet:
 		self.__ACCESS_SECRET = jsonObjects["ACCESS_SECRET"]
 		self.__auth = tweepy.OAuthHandler(self.__CONSUMER_KEY, self.__CONSUMER_SECRET)
 		self.__auth.set_access_token(self.__ACCESS_TOKEN, self.__ACCESS_SECRET)
-		self.api = tweepy.API(self.__auth)
+		self.__api = tweepy.API(self.__auth)
+	def DoMsg(self, message):
+		self.__api.update_status(status=message)
+	def DoImage(self, image, message):
+		self.__api.update_status(status=message)
+
