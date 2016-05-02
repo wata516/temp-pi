@@ -20,6 +20,6 @@ class tweet:
 		self.__api = tweepy.API(self.__auth)
 	def DoMsg(self, message):
 		self.__api.update_status(status=message)
-	def DoImage(self, image, message):
-		self.__api.update_status(status=message)
+	def DoImage(self, imagefilename, message):
+		self.__api.update_status_with_media(imagefilename, status=message)
 
