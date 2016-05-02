@@ -47,9 +47,9 @@ class NowTempAction(object):
 	def limitcheck(self, place, temp, min_temp, max_temp):
 		notify_msg = ""
 		if temp > max_temp:
-			notify_msg = place + "の温度が%dを超えました" % max_temp
+			notify_msg = place + "の温度が%d度を超えました" % max_temp
 		if temp < min_temp:
-			notify_msg = place + "の温度が%dを下回りました" % min_temp
+			notify_msg = place + "の温度が現在%d度です。既定の%d度を下回りました。何か対策をして下さい" % (temp, min_temp)
 
 		if not notify_msg == "":
 			tw = tempnotify()
