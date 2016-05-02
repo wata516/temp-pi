@@ -7,6 +7,10 @@ import os
 
 class NowTempAction(object):
 	"今の温度を取得し保存します"
+	__save_path = ""
+
+	def create(self, save_path):
+		self.__save_path = save_path
 	
 	# 温度を取得し、ファイルを保存します
 	def Do(self):
@@ -17,7 +21,7 @@ class NowTempAction(object):
 
 		# ファイルに書いてあるJsonを取得する
 		reader = datareader()
-		filename = tdatetime.strftime('%Y/%m/%d.json')
+		filename = self.__save_path + tdatetime.strftime('%Y/%m/%d.json')
 		pathfilename = os.path.dirname(filename)
 		if not os.path.exists(pathfilename):
 			os.makedirs(pathfilename)
