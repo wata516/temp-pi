@@ -22,5 +22,5 @@ class tweet:
 	def DoMsg(self, message):
 		self.__api.update_status(status=message)
 	def DoImage(self, imagefilename, message):
-		self.__api.update_status_with_media(imagefilename, status=message)
+		self.__api.update_with_media(filename=imagefilename, status=message)
 

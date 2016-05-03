@@ -6,6 +6,9 @@ import os
 import sys
 import json
 import datetime
+import re
+
+from tweet import *
 
 param = sys.argv
 
@@ -14,6 +17,12 @@ if __name__ == "__main__":
 	year = int(param[2])
 	month = int(param[3])
 	day = int(param[4])
+	
+	tweetmsg = ""
+	for arg in param:
+		match = re.search("-tw=\S*", arg)
+		if match is not None:
+			tweetmsg = match.group().split("-tw=")[1]
 	
 	seprate = os.sep
 	filename = home_path + "%04d%s%02d%s%02d.json" % (year,os.sep,month,os.sep,day)
@@ -94,7 +103,6 @@ if __name__ == "__main__":
 				if xgrid_temptures[xgrid[curi]]["min"][tempkey] > jsonObjects[timedata][tempkey]:
 					xgrid_temptures[xgrid[curi]]["min"][tempkey] = jsonObjects[timedata][tempkey]
 
-	print (plot_temptures)
 	for xgridtime in xgrid:
 		tempKeys = plot_temptures.keys()
 		for tempKey in tempKeys:
@@ -139,20 +147,9 @@ if __name__ == "__main__":
 
 	plt.savefig(graphfilename)
 	
-	sys.exit(0)
-
-	fig, ax_f = plt.subplots()
-
-	ax_f.set_xlim(0, 2359)
-
-	ax_f.set_ylim(0, 50)
-	ax_f.set_title("%04d/%02d/%02d" % (year,month,day))
-	ax_f.set_ylabel('temperature')
-
-	with plt.style.context('fivethirtyeight'):
-		ax_f.plot(x,y_temp1)
-		ax_f.plot(x,y_temp2)
-		
-	plt.savefig(graphfilename)
-
+	if tweetmsg is not "":
+		tw = tweet()
+		tw.Create(home_path)
+		tw.DoImage(graphfilename, tweetmsg)
+	
 sys.exit(0)
