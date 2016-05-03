@@ -38,6 +38,11 @@ class TempGetter(DataGetter):
 	def GetDeviceNickName(self, devicename):
 		return self.__devices[devicename]["nickname"]
 	
+	def GetDeviceLimit(self, devicename):
+		if "limit" not in self.__devices[devicename]:
+			return None
+		return self.__devices[devicename]["limit"]
+
 	def GetDeviceTempture(self, devicename):
 		if "tempture" not in self.__devices[devicename]:
 			return None

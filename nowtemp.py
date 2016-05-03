@@ -30,7 +30,7 @@ class NowTempAction(object):
 			if device_temp is None:
 				continue
 			# limit checkをしてTwitterに通知する
-			self.limitcheck( TempGet.GetDeviceNickName(device), device_temp, 0, 35)
+			self.limitcheck( TempGet.GetDeviceNickName(device), device_temp, TempGet.GetDeviceLimit(device))
 			# 取得したデータをファイルに書き出すデータを作成する
 			append_dict[nowdatekey][device] = device_temp
 
@@ -53,8 +53,13 @@ class NowTempAction(object):
 		writer = datawritter()
 		writer.write(filename, json.dumps(jsonObjects, sort_keys=True, indent=4))
 
-	def limitcheck(self, place, temp, min_temp, max_temp):
+	def limitcheck(self, place, temp, limit):
 		notify_msg = ""
+		if limit is None:
+			return
+		max_temp = float(limit["max"])
+		min_temp = float(limit["min"])
+
 		if temp > max_temp:
 			notify_msg = place + "の温度が現在%d度です。既定の%d度を超えました。何か対策をして下さい" % (temp, max_temp)
 		if temp < min_temp:
