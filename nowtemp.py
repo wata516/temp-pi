@@ -16,14 +16,23 @@ class NowTempAction(object):
 	# 温度を取得し、ファイルを保存します
 	def Do(self):
 		# 今日のJsonを作成する
-		tmp = TempGetter()
+		TempGet = TempGetter()
 		tdatetime = dt.now()
 		nowdatekey = tdatetime.strftime('%H%M')
-		append_dict = {nowdatekey: tmp.GetData()}
+		
+		TempGet.Create(self.__home_path)
+		
+		append_dict = {nowdatekey:{}}
+		TempGet.GetTemptureFromDevices()
 
-		#limit checkをしてTwitterに通知する
-		self.limitcheck("左側", int(append_dict[nowdatekey]["temp1"]), 30, 35)
-		self.limitcheck("右側", int(append_dict[nowdatekey]["temp2"]), 30, 35)
+		for device in TempGet.GetDevices():
+			device_temp = TempGet.GetDeviceTempture(device)
+			if device_temp is None:
+				continue
+			# limit checkをしてTwitterに通知する
+			self.limitcheck( TempGet.GetDeviceNickName(device), device_temp, 0, 35)
+			# 取得したデータをファイルに書き出すデータを作成する
+			append_dict[nowdatekey][device] = device_temp
 
 		# ファイルに書いてあるJsonを取得する
 		reader = datareader()
