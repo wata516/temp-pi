@@ -124,15 +124,15 @@ if __name__ == "__main__":
 			ax.plot(xval,plot_temptures[tempKey],linestyle="-",label=tempKey)
 
 	ax.set_ylim(-5, 45)
-	ax.set_xlabel("time")
-	ax.set_ylabel("tempture")
+	ax.set_xlabel("Time")
+	ax.set_ylabel("Tempture")
 	ax.legend(loc="upper right")
 	ax.set_title("%04d/%02d/%02d" % (year,month,day))
 	ax.grid()
 
 	# グラフのフォーマットの設定
-	days      = mdates.DayLocator()  # every day
-	daysFmt = mdates.DateFormatter('%H-%M')
+	days      = mdates.HourLocator()  # every day
+	daysFmt = mdates.DateFormatter('%H:%M')
 	ax.xaxis.set_major_locator(days)
 	ax.xaxis.set_major_formatter(daysFmt)
 	fig.autofmt_xdate()
