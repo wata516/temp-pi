@@ -18,7 +18,7 @@ class NowTempAction(object):
 		# 今日のJsonを作成する
 		TempGet = TempGetter()
 		tdatetime = dt.now()
-		nowdatekey = tdatetime.strftime('%H%M')
+		nowdatekey = tdatetime.strftime('%H:%M')
 		
 		TempGet.Create(self.__home_path)
 		
