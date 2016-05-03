@@ -59,7 +59,8 @@ if __name__ == "__main__":
 	# 取得した時刻のラベルを設定する
 	keylist = jsonObjects.keys()
 
-	plot_temptures = {}
+	plot_temptures_min = {}
+	plot_temptures_max = {}
 	xgrid_temptures = {}
 	for timedata in keylist:
 		hourmin = timedata.split(":")
@@ -79,7 +80,7 @@ if __name__ == "__main__":
 			xgrid_next_minuts = int(xgrid_next_hourmin[1])
 
 			if xgrid[curi] not in xgrid_temptures:
-				xgrid_temptures.update({xgrid[curi]:{"arrays":[], "min":{}}})
+				xgrid_temptures.update({xgrid[curi]:{"arrays":[], "min":{}, "max":{}}})
 
 			now_minuts = hour * 60 + minuts
 			if not ((now_minuts >= xgrid_hour * 60 + xgrid_minuts) and (now_minuts < xgrid_next_hour * 60 + xgrid_next_minuts)):
@@ -94,32 +95,52 @@ if __name__ == "__main__":
 
 			# 最小値を更新する
 			for tempkey in jsonObjects[timedata]:
-				if tempkey not in plot_temptures:
-					plot_temptures[tempkey] = []
+				if tempkey not in plot_temptures_min:
+					plot_temptures_min[tempkey] = []
 
 				if tempkey not in xgrid_temptures[xgrid[curi]]["min"]:
 					xgrid_temptures[xgrid[curi]]["min"][tempkey] = jsonObjects[timedata][tempkey]
 					continue
 				if xgrid_temptures[xgrid[curi]]["min"][tempkey] > jsonObjects[timedata][tempkey]:
 					xgrid_temptures[xgrid[curi]]["min"][tempkey] = jsonObjects[timedata][tempkey]
+			# 最大値を更新する
+			for tempkey in jsonObjects[timedata]:
+				if tempkey not in plot_temptures_max:
+					plot_temptures_max[tempkey] = []
+
+				if tempkey not in xgrid_temptures[xgrid[curi]]["max"]:
+					xgrid_temptures[xgrid[curi]]["max"][tempkey] = jsonObjects[timedata][tempkey]
+					continue
+				if xgrid_temptures[xgrid[curi]]["max"][tempkey] < jsonObjects[timedata][tempkey]:
+					xgrid_temptures[xgrid[curi]]["max"][tempkey] = jsonObjects[timedata][tempkey]
 
 	for xgridtime in xgrid:
-		tempKeys = plot_temptures.keys()
+		tempKeys = plot_temptures_min.keys()
 		for tempKey in tempKeys:
-			plot_temptures[tempKey].append(0)
+			plot_temptures_min[tempKey].append(0)
+			plot_temptures_max[tempKey].append(0)
 
 		for temptures in xgrid_temptures[xgridtime]["arrays"]:
 				tempKeys = temptures.keys()
 				for tempKey in tempKeys:
-					plot_temptures[tempkey][-1] = xgrid_temptures[xgridtime]["min"][tempKey]
+					plot_temptures_min[tempkey][-1] = xgrid_temptures[xgridtime]["min"][tempKey]
+					plot_temptures_max[tempkey][-1] = xgrid_temptures[xgridtime]["max"][tempKey]
 
-		tempKeys = plot_temptures.keys()
+		tempKeys = plot_temptures_min.keys()
 		max_length = 0
 		for tempKey in tempKeys:
-			max_length = max(len(plot_temptures[tempKey]), max_length)
+			max_length = max(len(plot_temptures_min[tempKey]), max_length)
 		for tempKey in tempKeys:
-			for counter in range(len(plot_temptures[tempKey]), max_length):
-				plot_temptures[tempKey].append(0)
+			for counter in range(len(plot_temptures_min[tempKey]), max_length):
+				plot_temptures_min[tempKey].append(0)
+
+		tempKeys = plot_temptures_max.keys()
+		max_length = 0
+		for tempKey in tempKeys:
+			max_length = max(len(plot_temptures_max[tempKey]), max_length)
+		for tempKey in tempKeys:
+			for counter in range(len(plot_temptures_max[tempKey]), max_length):
+				plot_temptures_max[tempKey].append(0)
 
 	# データをセット
 	fig = plt.figure()
@@ -127,9 +148,10 @@ if __name__ == "__main__":
 
 	xval = [parser.parse(xv) for xv in xgrid]
 	with plt.style.context('fivethirtyeight'):
-		tempKeys = plot_temptures.keys()
+		tempKeys = plot_temptures_min.keys()
 		for tempKey in tempKeys:
-			ax.plot(xval,plot_temptures[tempKey],linestyle="-",label=tempKey)
+			ax.plot(xval,plot_temptures_min[tempKey],linestyle="-",label=tempKey + "_min")
+			ax.plot(xval,plot_temptures_max[tempKey],linestyle="-",label=tempKey + "_max")
 
 	ax.set_ylim(-5, 45)
 	ax.set_xlabel("Time")
