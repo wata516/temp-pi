@@ -25,8 +25,6 @@ class tempgraph:
 		file.close()
 
 		x = []
-		y_temp1 = []
-		y_temp2 = []
 		
 		xgrid = ["00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
 		"03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
@@ -112,8 +110,8 @@ class tempgraph:
 			for temptures in xgrid_temptures[xgridtime]["arrays"]:
 					tempKeys = temptures.keys()
 					for tempKey in tempKeys:
-						plot_temptures_min[tempkey][-1] = xgrid_temptures[xgridtime]["min"][tempKey]
-						plot_temptures_max[tempkey][-1] = xgrid_temptures[xgridtime]["max"][tempKey]
+						plot_temptures_min[tempKey][-1] = xgrid_temptures[xgridtime]["min"][tempKey]
+						plot_temptures_max[tempKey][-1] = xgrid_temptures[xgridtime]["max"][tempKey]
 
 			tempKeys = plot_temptures_min.keys()
 			max_length = 0
