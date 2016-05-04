@@ -9,6 +9,7 @@ import datetime
 import re
 
 from tweet import *
+from datagetter import TempGetter
 
 class tempgraph:
 	def Do(self, home_path, year, month, day, tweetmsg):
@@ -131,27 +132,36 @@ class tempgraph:
 
 		# データをセット
 		fig = plt.figure()
-		ax = fig.add_subplot(1,1,1)
+		tempKeys = plot_temptures_min.keys()
+		
+		tg = TempGetter()
+		tg.Create(home_path)
+		gridx = 1
 
-		xval = [parser.parse(xv) for xv in xgrid]
-		with plt.style.context('fivethirtyeight'):
-			tempKeys = plot_temptures_min.keys()
-			for tempKey in tempKeys:
-				ax.plot(xval,plot_temptures_min[tempKey],linestyle="-",label=tempKey + "_min")
-				ax.plot(xval,plot_temptures_max[tempKey],linestyle="-",label=tempKey + "_max")
+		for tempKey in tempKeys:
+			ax = fig.add_subplot(2, 1, gridx)
+			gridx = gridx + 1
 
-		ax.set_ylim(-5, 45)
-		ax.set_xlabel("Time")
-		ax.set_ylabel("Tempture")
-		ax.legend(loc="upper right")
-		ax.set_title("%04d/%02d/%02d" % (year,month,day))
-		ax.grid()
+			xval = [parser.parse(xv) for xv in xgrid]
+			devicename = tg.GetDeviceNickName(tempKey)
+			if devicename is None:
+				devicename = tempKey
+			with plt.style.context('fivethirtyeight'):
+				ax.plot(xval,plot_temptures_max[tempKey],linestyle="-",label="max", marker='o', linewidth = 2.0, color='red')
+				ax.plot(xval,plot_temptures_min[tempKey],linestyle="-",label="min", marker='o', linewidth = 2.0, color='green')
 
-		# グラフのフォーマットの設定
-		days      = mdates.HourLocator()  # every day
-		daysFmt = mdates.DateFormatter('%H:%M')
-		ax.xaxis.set_major_locator(days)
-		ax.xaxis.set_major_formatter(daysFmt)
+			ax.set_ylim(0, 60)
+			ax.set_xlabel("Time")
+			ax.set_ylabel("Tempture")
+			ax.legend(loc="upper right")
+			ax.set_title("%04d/%02d/%02d" % (year,month,day))
+			ax.grid()
+
+			# グラフのフォーマットの設定
+			days      = mdates.HourLocator()  # every day
+			daysFmt = mdates.DateFormatter('%H:%M')
+			ax.xaxis.set_major_locator(days)
+			ax.xaxis.set_major_formatter(daysFmt)
 		fig.autofmt_xdate()
 
 		plt.savefig(graphfilename)
