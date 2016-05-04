@@ -19,8 +19,11 @@ class tweet:
 		self.__auth = tweepy.OAuthHandler(self.__CONSUMER_KEY, self.__CONSUMER_SECRET)
 		self.__auth.set_access_token(self.__ACCESS_TOKEN, self.__ACCESS_SECRET)
 		self.__api = tweepy.API(self.__auth)
+		return self.__auth
 	def DoMsg(self, message):
 		self.__api.update_status(status=message)
 	def DoImage(self, imagefilename, message):
 		self.__api.update_with_media(filename=imagefilename, status=message)
+	def SendDirectMessage(self, to_user_id, message):
+		self.__api.send_direct_message(user_id=to_user_id, text=message)
 

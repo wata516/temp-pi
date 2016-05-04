@@ -1,7 +1,67 @@
-from tweet import *
+﻿from tweet import *
+import tweepy
+import sys
 
-class tempnotify:
-	def DoTweet(self, home_path, message):
-		tw = tweet()
-		tw.Create(home_path)
-		tw.DoMsg(message)
+param = sys.argv
+
+home_path = param[1] + os.sep
+
+tw = tweet()
+
+class myExeption(Exception): pass
+class myExeptionDisconnect(Exception): pass
+
+class StreamListener(tweepy.streaming.StreamListener):
+
+	def __init__(self):
+		super(StreamListener,self).__init__()
+
+	def on_disconnect( self, notice ):
+		print("Connection lost!! : ", notice)
+		raise myExeptionDisconnect
+
+	def on_error(self,status):
+		print ("can't get")
+		raise myExeptionDisconnect
+
+	def on_timeout(self):
+		raise myExeption
+
+	def on_data( self, status ):
+		print("Entered on_direct_message()")
+		decoded = json.loads(status)
+
+		message = ""
+		print(status)
+		if "direct_message" in decoded:
+			## grab the direct message
+			directMessage = decoded['direct_message']
+
+			message = directMessage.get('text', None)
+			sender = directMessage.get('sender', None)
+			message.strip()
+			if message=="グラフ":
+				print ("グラフを送ります")
+				tw.DoImage("C:\\Home\\temp\\2016\\05\\04.png", "更新")
+				tw.SendDirectMessage(sender["id_str"], "画像をTweetしました")
+		print ("on_data: *", message, "*")
+		return True
+
+def get_tw_auth():
+	auth = tw.Create(home_path)
+	return auth
+
+if __name__ == '__main__':
+	auth = get_tw_auth()
+	stream = tweepy.Stream(auth, StreamListener(), secure=True)
+	while True :
+		try:
+			stream.userstream()
+		except myExeption() :
+			print ("Exception")
+			time.sleep(600)
+			stream = tweepy.Stream(auth,StreamListener(), secure=True)
+		except myExeptionDisconnect() :
+			time.sleep(600)
+			stream = tweepy.Stream(auth,StreamListener(), secure=True)
+
