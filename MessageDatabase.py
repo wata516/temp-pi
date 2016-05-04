@@ -27,9 +27,9 @@ class MessageDatabase:
 		
 	def GetNowTime(self, message):
 		if self.__InName(message, ["今の"]):
-			return [date.today()]
-		if self.__InName(message, ["現在"]):
-			return [date.today()]
+			return datetime.datetime.now()
+		if self.__InName(message, ["現在の"]):
+			return datetime.datetime.now()
 		return None
 	def GetFeatureTime(self, message):
 		if self.__InName(message, ["明日"]):
