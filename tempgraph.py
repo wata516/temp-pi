@@ -154,7 +154,7 @@ class tempgraph:
 			ax.set_xlabel("Time")
 			ax.set_ylabel("Tempture")
 			ax.legend(loc="upper right")
-			ax.set_title("%04d/%02d/%02d" % (year,month,day))
+			ax.set_title("%04d/%02d/%02d(%s)" % (year,month,day, tg.GetDeviceNickNameEN(tempKey)))
 			ax.grid()
 
 			# グラフのフォーマットの設定
