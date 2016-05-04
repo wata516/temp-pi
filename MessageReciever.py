@@ -10,9 +10,11 @@ class MessageReciever:
 	__msg_database = MessageDatabase()
 	__messages = []
 	__home_path = ""
-	def __init__(self, home_path):
+	def __init__(self):
 		self.__messages.append(msg_temp_notify())
 		self.__messages.append(msg_temp_graph())
+
+	def Create(self, home_path):
 		self.__home_path = home_path
 
 	def send(self, message):
@@ -22,5 +24,6 @@ class MessageReciever:
 if __name__ == '__main__':
 	param = sys.argv
 
-	reciever = MessageReciever(param[1])
+	reciever = MessageReciever()
+	reciever.Create(param[1])
 	reciever.send(param[2])

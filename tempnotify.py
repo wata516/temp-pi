@@ -1,14 +1,16 @@
 ﻿from tweet import *
 import tweepy
 import sys
+import multiprocessing
 
 class myExeption(Exception): pass
 class myExeptionDisconnect(Exception): pass
 
 class StreamListener(tweepy.streaming.StreamListener):
-
-	def __init__(self):
+	__messages = None
+	def __init__(self, messages):
 		super(StreamListener,self).__init__()
+		self.__messages = messages
 
 	def on_disconnect( self, notice ):
 		print("Connection lost!! : ", notice)
@@ -34,33 +36,30 @@ class StreamListener(tweepy.streaming.StreamListener):
 			message = directMessage.get('text', None)
 			sender = directMessage.get('sender', None)
 			message.strip()
-			if message=="グラフ":
-				print ("グラフを送ります")
-				tw.DoImage("C:\\Home\\temp\\2016\\05\\04.png", "更新")
-				tw.SendDirectMessage(sender["id_str"], "画像をTweetしました")
-		print ("on_data: *", message, "*")
+			self.__messages.put([message])
+			print ("Direct Message: *", message, "*")
 		return True
 
-
 class TweetReciever:
-	def main_loop(self, home_path):
+	__stream = None
+
+	def main_loop(self, home_path, messages):
 		tw = tweet()
 		auth = tw.Create(home_path)
-		stream = tweepy.Stream(auth, StreamListener(), secure=True)
+		__stream = tweepy.Stream(auth, StreamListener(messages), secure=True)
 		while True :
 			try:
-				stream.userstream()
+				__stream.userstream()
 			except myExeption() :
-				print ("Exception")
 				time.sleep(600)
-				stream = tweepy.Stream(auth,StreamListener(), secure=True)
+				__stream = tweepy.Stream(auth,StreamListener(messages), secure=True)
 			except myExeptionDisconnect() :
 				time.sleep(600)
-				stream = tweepy.Stream(auth,StreamListener(), secure=True)
+				__stream = tweepy.Stream(auth,StreamListener(messages), secure=True)
 
 if __name__ == '__main__':
 	reciever = TweetReciever()
 	param = sys.argv
 	home_path = param[1] + os.sep
-	reciever.main_loop(home_path)
+	reciever.main_loop(home_path, None)
 
