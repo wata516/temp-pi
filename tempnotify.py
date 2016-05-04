@@ -2,12 +2,6 @@
 import tweepy
 import sys
 
-param = sys.argv
-
-home_path = param[1] + os.sep
-
-tw = tweet()
-
 class myExeption(Exception): pass
 class myExeptionDisconnect(Exception): pass
 
@@ -47,21 +41,26 @@ class StreamListener(tweepy.streaming.StreamListener):
 		print ("on_data: *", message, "*")
 		return True
 
-def get_tw_auth():
-	auth = tw.Create(home_path)
-	return auth
+
+class TweetReciever:
+	def main_loop(self, home_path):
+		tw = tweet()
+		auth = tw.Create(home_path)
+		stream = tweepy.Stream(auth, StreamListener(), secure=True)
+		while True :
+			try:
+				stream.userstream()
+			except myExeption() :
+				print ("Exception")
+				time.sleep(600)
+				stream = tweepy.Stream(auth,StreamListener(), secure=True)
+			except myExeptionDisconnect() :
+				time.sleep(600)
+				stream = tweepy.Stream(auth,StreamListener(), secure=True)
 
 if __name__ == '__main__':
-	auth = get_tw_auth()
-	stream = tweepy.Stream(auth, StreamListener(), secure=True)
-	while True :
-		try:
-			stream.userstream()
-		except myExeption() :
-			print ("Exception")
-			time.sleep(600)
-			stream = tweepy.Stream(auth,StreamListener(), secure=True)
-		except myExeptionDisconnect() :
-			time.sleep(600)
-			stream = tweepy.Stream(auth,StreamListener(), secure=True)
+	reciever = TweetReciever()
+	param = sys.argv
+	home_path = param[1] + os.sep
+	reciever.main_loop(home_path)
 
