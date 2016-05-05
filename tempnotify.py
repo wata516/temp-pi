@@ -56,6 +56,9 @@ class TweetReciever:
 			except myExeptionDisconnect() :
 				time.sleep(600)
 				__stream = tweepy.Stream(auth,StreamListener(messages), secure=True)
+			except :
+				time.sleep(600)
+				__stream = tweepy.Stream(auth,StreamListener(messages), secure=True)
 
 if __name__ == '__main__':
 	reciever = TweetReciever()
