@@ -49,15 +49,16 @@ class TweetReciever:
 		__stream = tweepy.Stream(auth, StreamListener(messages), secure=True)
 		while True :
 			try:
+				__stream.timeout = None
 				__stream.userstream()
 			except myExeption() :
-				time.sleep(600)
+				time.sleep(60)
 				__stream = tweepy.Stream(auth,StreamListener(messages), secure=True)
 			except myExeptionDisconnect() :
-				time.sleep(600)
+				time.sleep(60)
 				__stream = tweepy.Stream(auth,StreamListener(messages), secure=True)
 			except :
-				time.sleep(600)
+				time.sleep(60)
 				__stream = tweepy.Stream(auth,StreamListener(messages), secure=True)
 
 if __name__ == '__main__':
