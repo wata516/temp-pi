@@ -25,14 +25,7 @@ class msg_temp_graph:
 		if pasttime is None:
 			return
 
-		tw = tweet()
-		tw.Create(home_path)
-		
-		TempGet = TempGetter()
-		TempGet.Create(home_path)
-		TempGet.GetTemptureFromDevices()
-		
-		date_msg = pasttime.strftime("%Y/%m/%d %H:%M:%S") + "の"
+		date_msg = pasttime.strftime("%Y/%m/%d") + "の"
 
 		if bGraph:
 			notify_msg = date_msg + "温度グラフは、こちらです"
