@@ -1,8 +1,9 @@
-﻿import matplotlib.pyplot as plt
+﻿import matplotlib
+matplotlib.use('Agg')
+
+import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import dateutil.parser as parser
-
-matplotlib.use('Agg')
 
 import os
 import sys
