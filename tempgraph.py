@@ -2,6 +2,8 @@
 import matplotlib.dates as mdates
 import dateutil.parser as parser
 
+matplotlib.use('Agg')
+
 import os
 import sys
 import json
